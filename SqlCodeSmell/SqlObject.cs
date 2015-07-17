@@ -22,12 +22,12 @@ namespace Test.SqlCodeSmell
 
         public List<NGram> nGramList { get; set; }
 
-        public SqlObject(string name,EnumSqlObjType sqlObjType,string orgCode)
+        public SqlObject(SqlObjectData sqlObjectData )
         {
-            Name = name;
-            SqlObjType = sqlObjType;
-            OrgCode = orgCode;
-            _washedCode = WashCode(orgCode);
+            Name = sqlObjectData.Name;
+            SqlObjType = sqlObjectData.SqlObjType;
+            OrgCode = sqlObjectData.SqlObjCode;
+            _washedCode = WashCode(OrgCode);
         }
 
         private string WashCode(string input)
@@ -53,22 +53,18 @@ namespace Test.SqlCodeSmell
                 .ToArray());
         }
     }
+    public class SqlObjectData
+    {
+        public string SqlObjCode { get; set; }       
+        public  string Name{ get; set; }
+        public EnumSqlObjType SqlObjType { get; set; }  
+    }
     public class SqlObjectReader
     {
-        public virtual string GetNextSqlObjCode()
+        public virtual SqlObjectData GetNextSqlObj()
         {           
-            return "";
+            return null;
         }
-        public virtual string GetNextName()
-        {
-            return "";
-        }
-        public virtual EnumSqlObjType GetNextType()
-        {
-            return 0;
-        }
- 
-
     }
     public class NGram
     {

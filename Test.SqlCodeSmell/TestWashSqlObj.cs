@@ -14,15 +14,15 @@ namespace Test.SqlCodeSmell
         static public void TestStoredProcedureWithCommentAndWhiteIsWashed()
         {
             //Arrange
+            var mockSqlObjectData = MockRepository.GenerateStub<SqlObjectData>();
+            mockSqlObjectData.SqlObjType = Mv.StoredProcedureWithCommentsType;
+            mockSqlObjectData.Name = Mv.StoredProcedureWithCommentsName;
+            mockSqlObjectData.SqlObjCode = Mv.StoredProcedureWithCommentsCode;
             var mockSqlObjectReader = MockRepository.GenerateStub<SqlObjectReader>();
-            mockSqlObjectReader.Stub(f => f.GetNextType()).Return(Mv.StoredProcedureWithCommentsType);
-            mockSqlObjectReader.Stub(f => f.GetNextName()).Return(Mv.StoredProcedureWithCommentsName);
-            mockSqlObjectReader.Stub(f => f.GetNextSqlObjCode()).Return(Mv.StoredProcedureWithCommentsCode);
+            mockSqlObjectReader.Stub(f => f.GetNextSqlObj()).Return(mockSqlObjectData);
             var expectedCode = Mv.StoredProcedureWithCommentsWashedcode;
             //Act
-            var sut = new SqlObject(name: mockSqlObjectReader.GetNextName()
-                , sqlObjType: mockSqlObjectReader.GetNextType()
-                , orgCode: mockSqlObjectReader.GetNextSqlObjCode());                        
+            var sut = new SqlObject(sqlObjectData: mockSqlObjectReader.GetNextSqlObj());                        
             //Assert
             Assert.AreEqual(expectedCode, sut.WashedCode, "Washed code is not what I expected");
         }
