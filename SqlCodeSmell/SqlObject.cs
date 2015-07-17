@@ -27,13 +27,14 @@ namespace Test.SqlCodeSmell
             Name = name;
             SqlObjType = sqlObjType;
             OrgCode = orgCode;
+            _washedCode = WashCode(orgCode);
         }
 
-        public void WashCode()
+        private string WashCode(string input)
         {
-            var noComments = RemovComments(OrgCode);
+            var noComments = RemovComments(input);
             var noWhiteCode = RemoveWhitespace(noComments);
-            _washedCode = noWhiteCode.ToLower();
+            return  noWhiteCode.ToLower();
         }
 
         private string RemovComments(string input)

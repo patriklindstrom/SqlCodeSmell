@@ -18,13 +18,11 @@ namespace Test.SqlCodeSmell
             mockSqlObjectReader.Stub(f => f.GetNextType()).Return(Mv.StoredProcedureWithCommentsType);
             mockSqlObjectReader.Stub(f => f.GetNextName()).Return(Mv.StoredProcedureWithCommentsName);
             mockSqlObjectReader.Stub(f => f.GetNextSqlObjCode()).Return(Mv.StoredProcedureWithCommentsCode);
+            var expectedCode = Mv.StoredProcedureWithCommentsWashedcode;
+            //Act
             var sut = new SqlObject(name: mockSqlObjectReader.GetNextName()
                 , sqlObjType: mockSqlObjectReader.GetNextType()
-                , orgCode: mockSqlObjectReader.GetNextSqlObjCode());
-            var expectedCode = Mv.StoredProcedureWithCommentsWashedcode;
-            
-            //Act
-            sut.WashCode();            
+                , orgCode: mockSqlObjectReader.GetNextSqlObjCode());                        
             //Assert
             Assert.AreEqual(expectedCode, sut.WashedCode, "Washed code is not what I expected");
         }
