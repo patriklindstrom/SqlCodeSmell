@@ -68,10 +68,9 @@ namespace Test.SqlCodeSmell
     }
     public class NGram
     {
-        public int Length { get; set; }
         public string Gram { get; set; }
         public string Hashvalue { get; set; }
-        public NGram(int length, string gram)
+        public NGram(string gram,Func<string, string> hashFunc)
         {
 
         }
