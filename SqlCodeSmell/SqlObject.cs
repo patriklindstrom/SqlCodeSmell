@@ -7,27 +7,36 @@ using System.Threading.Tasks;
 
 namespace Test.SqlCodeSmell
 {
-   public enum EnumSqlObjType { StoredProcedur };
+   public enum EnumSqlObjType { StoredProcedure,ScalarFunction,TableFunction };
     public class SqlObject
     {
         private string _washedCode;
         public string Name { get; set; }
         public EnumSqlObjType SqlObjType { get; set; }
         public string OrgCode { get; set; }
+        public NGramSeq NGramSequnce { get; set; }
 
         public string WashedCode
         {
             get { return _washedCode; }           
         }
 
-        public List<NGram> nGramList { get; set; }
+        public List<NGram> NGramList { get; set; }
 
-        public SqlObject(SqlObjectData sqlObjectData )
+        public SqlObject(SqlObjectData sqlObjectData, int gramLen, Func<string, string> hashFunc)
         {
             Name = sqlObjectData.Name;
             SqlObjType = sqlObjectData.SqlObjType;
             OrgCode = sqlObjectData.SqlObjCode;
             _washedCode = WashCode(OrgCode);
+            NGramSequnce = AddNGramSequnce(hashFunc, gramLen, _washedCode);
+        }
+
+        private NGramSeq AddNGramSequnce(Func<string, string> hashFunc,int gramLen,string washedCode)
+        {
+            var nGramSeq = new NGramSeq(hashFunc,gramLen);
+
+            return NGramSequnce;
         }
 
         private string WashCode(string input)
@@ -70,19 +79,18 @@ namespace Test.SqlCodeSmell
     {
         public string Gram { get; set; }
         public string Hashvalue { get; set; }
-        public NGram(string gram,Func<string, string> hashFunc)
-        {
-
-        }
+        public string Position0Based { get; set; } 
     }
     public class NGramSeq
     {
+        public NGramSeq(Func<string, string> hashFunc,int gramLen)
+        {
+            HashFunc = hashFunc;
+        }
         public List<NGram> NGramList { get; set; }
         public int GramLength { get; set; }
         public string Hashvalue { get; set; }
-        private Func<string, string> HashFunc()
-        {
-            throw new NotImplementedException();
-        }
+        private Func<string, string> HashFunc { get; set; }
+       
     }
 }

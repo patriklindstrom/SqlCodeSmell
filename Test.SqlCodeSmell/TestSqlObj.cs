@@ -24,7 +24,7 @@ namespace Test.SqlCodeSmell
         }
 
         [Test]
-        static public void TestStoredProcedureWithCommentAlskdjflkjndWhiteIsWashed()
+        static public void TestGramAndHash()
         {
             //Arrange
             var mockSqlObjectData = MockRepository.GenerateStub<SqlObjectData>();
