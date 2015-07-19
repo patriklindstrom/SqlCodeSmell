@@ -32,7 +32,7 @@ namespace Test.SqlCodeSmell
             NGramSequnce = AddNGramSequnce(hashFunc, gramLen, _washedCode);
         }
 
-        private NGramSeq AddNGramSequnce(Func<string, string> hashFunc,int gramLen,string washedCode)
+        public NGramSeq AddNGramSequnce(Func<string, string> hashFunc,int gramLen,string washedCode)
         {
             var nGramSeq = new NGramSeq(hashFunc,gramLen);
 

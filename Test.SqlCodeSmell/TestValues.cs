@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Rhino.Mocks.Constraints;
 
 namespace Test.SqlCodeSmell
 {
@@ -12,7 +14,7 @@ namespace Test.SqlCodeSmell
    public static class Mv
     {
        public static string StoredProcedureWithCommentsName = "StoredProcedureWithComments_SP";
-       public static EnumSqlObjType StoredProcedureWithCommentsType = EnumSqlObjType.StoredProcedur;
+       public static EnumSqlObjType StoredProcedureWithCommentsType = EnumSqlObjType.StoredProcedure;
        public static string StoredProcedureWithCommentsCode = "--I smell the blood of an ;Englishman\r\n Create procedure as select o.id,o.foo,u.fum from foo_TB as o\r\n " +
                                                                "/*here comes a join;\r\n" +
                                                                "we do not want to miss*/\r\n" +
@@ -93,8 +95,28 @@ namespace Test.SqlCodeSmell
       };
       public static string Example5GramHashFucntion  (string gram)
       {
-          return gram.ToLower();
+          // TODO: change all examples and use GetHashCode instead I cant figure out their hash algoritm they have used. 
+          // as long as it is the same positions it is ok.
+        var hash= gram.GetHashCode();
+         // char[] gramCharArray = gram.ToCharArray();
+          //byte[] asciiBytes = Encoding.ASCII.GetBytes(gram);
+          //int gramSum = asciiBytes.Sum(c => c);
+          //for (int i = 2; i < 550; i++)
+          //{
+          //    var j = gramSum % i;
+          //    if (j == 77)
+          //    {
+          //        Debug.Print("+++ this is the onemodvalue:" + i.ToString());
+          //    }
+          //    Debug.Print(j.ToString());
+          //    Debug.Print("modvalue:" + j.ToString());
+          //}
+          //// 239 is a prime looks like they are using that in the example from Stanford
+          //int hashAsciiBytes = gramSum % 239;
+        return hash.ToString();
       }
+
+      public static int ExampleGramLength = 5;
 
     }
 }
