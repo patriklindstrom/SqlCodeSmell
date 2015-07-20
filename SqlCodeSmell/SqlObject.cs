@@ -35,7 +35,7 @@ namespace Test.SqlCodeSmell
         public NGramSeq AddNGramSequnce(Func<string, string> hashFunc,int gramLen,string washedCode)
         {
             var nGramSeq = new NGramSeq(hashFunc,gramLen);
-            var gramlist = washedCode.SplitBy(gramLen);
+            var gramlist = washedCode.SplitRunBy(gramLen);
             int i = 0;
             foreach (var grammy in gramlist)
             {
@@ -65,7 +65,7 @@ namespace Test.SqlCodeSmell
         private  string RemoveWhitespace( string input)
         {
             return new string(input.ToCharArray()
-                .Where(c => !Char.IsWhiteSpace(c))
+                .Where(c => !(Char.IsWhiteSpace(c) || Char.IsPunctuation(c) || Char.IsSeparator(c)))
                 .ToArray());
         }
     }
@@ -122,14 +122,14 @@ namespace Test.SqlCodeSmell
         {
             if (String.IsNullOrEmpty(str)) throw new ArgumentException();
             if (chunkLength < 1) throw new ArgumentException();
+            return str.TakeWhile((t, i) => chunkLength + i <= str.Length).Select((t, i) => str.Substring(i, chunkLength));
+            //for (int i = 0; i < str.Length; i++)
+            //{
+            //    if (chunkLength + i > str.Length)
+            //    { yield break; }
 
-            for (int i = 0; i < str.Length; i += chunkLength)
-            {
-                if (chunkLength + i > str.Length)
-                    chunkLength = str.Length - i;
-
-                yield return str.Substring(i, chunkLength);
-            }
+            //    yield return str.Substring(i, chunkLength);
+            //}
         }
     }
 }

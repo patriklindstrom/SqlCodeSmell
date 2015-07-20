@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Linq;
+using Microsoft.SqlServer.Server;
 using NUnit.Framework;
 using Rhino.Mocks;
 namespace Test.SqlCodeSmell
@@ -65,17 +66,18 @@ namespace Test.SqlCodeSmell
             //Arrange
             var mockSqlObjectData = MockRepository.GenerateStub<SqlObjectData>();
             mockSqlObjectData.SqlObjType = Mv.StoredProcedureWithCommentsType;
-            mockSqlObjectData.Name = Mv.StoredProcedureWithCommentsName;
-            mockSqlObjectData.SqlObjCode = Mv.StoredProcedureWithCommentsCode;
+            mockSqlObjectData.Name = "stanfordDoRunExample";
+            mockSqlObjectData.SqlObjCode = Mv.Examplecode;
             var mockSqlObjectReader = MockRepository.GenerateStub<SqlObjectReader>();
             mockSqlObjectReader.Stub(f => f.GetNextSqlObj()).Return(mockSqlObjectData);
-            var expectedCode = Mv.StoredProcedureWithCommentsWashedcode;
+            var expectedCode = Mv.ExamplecodeWashed;
             var expectedHash = Mv.Example5GramList.Select(Mv.Example5GramHashFunction);
             //Act
             var sut = new SqlObject(sqlObjectData: mockSqlObjectReader.GetNextSqlObj(), gramLen: Mv.ExampleGramLength, hashFunc: Mv.Example5GramHashFunction);
             sut.AddNGramSequnce(hashFunc: Mv.Example5GramHashFunction, gramLen: Mv.ExampleGramLength,
                 washedCode: Mv.ExamplecodeWashed);
             //Assert
+            Assert.AreEqual(expectedCode,sut.WashedCode,"The washedcode is not what is expected");
             CollectionAssert.AreEqual(Mv.Example5GramHashDotNetList, expectedHash, "Hashfunction does not give expected value for all Example grams");
         }
 
