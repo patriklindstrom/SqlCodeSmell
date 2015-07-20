@@ -70,12 +70,15 @@ namespace Test.SqlCodeSmell
             var mockSqlObjectReader = MockRepository.GenerateStub<SqlObjectReader>();
             mockSqlObjectReader.Stub(f => f.GetNextSqlObj()).Return(mockSqlObjectData);
             var expectedCode = Mv.StoredProcedureWithCommentsWashedcode;
+            var expectedHash = Mv.Example5GramList.Select(Mv.Example5GramHashFunction);
             //Act
             var sut = new SqlObject(sqlObjectData: mockSqlObjectReader.GetNextSqlObj(), gramLen: Mv.ExampleGramLength, hashFunc: Mv.Example5GramHashFunction);
             sut.AddNGramSequnce(hashFunc: Mv.Example5GramHashFunction, gramLen: Mv.ExampleGramLength,
-                washedCode: Mv.ExamplecodeWahsed);
+                washedCode: Mv.ExamplecodeWashed);
             //Assert
-            Assert.AreEqual(expectedCode, sut.WashedCode, "Washed code is not what I expected");
+            CollectionAssert.AreEqual(Mv.Example5GramHashDotNetList, expectedHash, "Hashfunction does not give expected value for all Example grams");
         }
+
+
     }
 }

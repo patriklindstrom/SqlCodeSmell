@@ -28,7 +28,7 @@ namespace Test.SqlCodeSmell
             "createprocedureasselecto.id,o.foo,u.fumfromfoo_tbasojoinfum_tbasuonu.id=o.id";
 
         public static string Examplecode = "A do run run run, a do run run";
-        public static string ExamplecodeWahsed = "adorunrunrunadorunrun";
+        public static string ExamplecodeWashed = "adorunrunrunadorunrun";
 
         public static List<string> Example5GramList = new List<string>()
         {

@@ -35,8 +35,15 @@ namespace Test.SqlCodeSmell
         public NGramSeq AddNGramSequnce(Func<string, string> hashFunc,int gramLen,string washedCode)
         {
             var nGramSeq = new NGramSeq(hashFunc,gramLen);
+            var gramlist = washedCode.SplitBy(gramLen);
+            int i = 0;
+            foreach (var grammy in gramlist)
+            {
+                nGramSeq.Add(gram: grammy, pos: (gramLen*i));
+                i++;
+            }
 
-            return NGramSequnce;
+            return nGramSeq;
         }
 
         private string WashCode(string input)
@@ -79,18 +86,50 @@ namespace Test.SqlCodeSmell
     {
         public string Gram { get; set; }
         public string Hashvalue { get; set; }
-        public string Position0Based { get; set; } 
+        public int Position0Based { get; set; } 
     }
     public class NGramSeq
     {
         public NGramSeq(Func<string, string> hashFunc,int gramLen)
         {
             HashFunc = hashFunc;
+            NGramList = new List<NGram>();
         }
         public List<NGram> NGramList { get; set; }
-        public int GramLength { get; set; }
-        public string Hashvalue { get; set; }
         private Func<string, string> HashFunc { get; set; }
-       
+
+        public void Add(string gram,int pos)
+        {
+           NGramList.Add(new NGram{Gram = gram,Hashvalue = HashFunc(gram),Position0Based = pos});
+        }
+    }
+    public static class EnumerableEx
+    {
+        public static IEnumerable<string> SplitBy(this string str, int chunkLength)
+        {
+            if (String.IsNullOrEmpty(str)) throw new ArgumentException();
+            if (chunkLength < 1) throw new ArgumentException();
+
+            for (int i = 0; i < str.Length; i += chunkLength)
+            {
+                if (chunkLength + i > str.Length)
+                    chunkLength = str.Length - i;
+
+                yield return str.Substring(i, chunkLength);
+            }
+        }
+        public static IEnumerable<string> SplitRunBy(this string str, int chunkLength)
+        {
+            if (String.IsNullOrEmpty(str)) throw new ArgumentException();
+            if (chunkLength < 1) throw new ArgumentException();
+
+            for (int i = 0; i < str.Length; i += chunkLength)
+            {
+                if (chunkLength + i > str.Length)
+                    chunkLength = str.Length - i;
+
+                yield return str.Substring(i, chunkLength);
+            }
+        }
     }
 }
