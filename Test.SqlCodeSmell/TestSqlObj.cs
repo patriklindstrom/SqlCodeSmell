@@ -81,6 +81,25 @@ namespace Test.SqlCodeSmell
             CollectionAssert.AreEqual(Mv.Example5GramHashDotNetList, expectedHash, "Hashfunction does not give expected value for all Example grams");
         }
 
+        [Test]
+        static public void TestWindowsOfhashesOfLengthN()
+        {
+            //Arrange
+            var mockSqlObjectData = MockRepository.GenerateStub<SqlObjectData>();
+            mockSqlObjectData.SqlObjType = Mv.StoredProcedureWithCommentsType;
+            mockSqlObjectData.Name = "stanfordDoRunExample";
+            mockSqlObjectData.SqlObjCode = Mv.Examplecode;
+            var mockSqlObjectReader = MockRepository.GenerateStub<SqlObjectReader>();
+            mockSqlObjectReader.Stub(f => f.GetNextSqlObj()).Return(mockSqlObjectData);
+            var expectedWindowList = Mv.WindowsOfLen4DotNetList;
+            var expectedHash = Mv.Example5GramList.Select(Mv.Example5GramHashFunction);
+            //Act
+            var sut = new SqlObject(sqlObjectData: mockSqlObjectReader.GetNextSqlObj(), gramLen: Mv.ExampleGramLength, hashFunc: Mv.Example5GramHashFunction);
+            sut.AddWindowsList(windowSize:Mv.ExampleWindowSize);
+            //Assert
+            
+            CollectionAssert.AreEqual(Mv.WindowsOfLen4DotNetList, sut.WindowsList, "The Windows list do not matcht expected values does");
+        }
 
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -22,6 +23,7 @@ namespace Test.SqlCodeSmell
         }
 
         public List<NGram> NGramList { get; set; }
+        public List<List<NGram>> WindowsList { get; set; }
 
         public SqlObject(SqlObjectData sqlObjectData, int gramLen, Func<string, string> hashFunc)
         {
@@ -67,6 +69,17 @@ namespace Test.SqlCodeSmell
             return new string(input.ToCharArray()
                 .Where(c => !(Char.IsWhiteSpace(c) || Char.IsPunctuation(c) || Char.IsSeparator(c)))
                 .ToArray());
+        }
+
+        public void AddWindowsList(object windowSize)
+        {
+            throw new NotImplementedException();
+        }
+
+        private int SelectUniqueHashInWindows()
+        {
+            // Min Hash and the max index in window to the right Aiken rule
+            throw new NotImplementedException();
         }
     }
     public class SqlObjectData

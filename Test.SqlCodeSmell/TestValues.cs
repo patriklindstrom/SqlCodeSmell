@@ -97,7 +97,7 @@ namespace Test.SqlCodeSmell
      public static List<List<string>> WindowsOfLen4DotNetList = new List<List<string>>()
         {
             new List<string> {"-824819715", "889328056", "1588508618", "-132281226"},
-            new List<string> { "889328056", "1588508618", "132281226","748182946"},
+            new List<string> { "889328056", "1588508618", "-132281226","748182946"},
             new List<string> {  "1588508618", "132281226","748182946","1588507657"},
             new List<string> {   "132281226","748182946","1588507657","-132281226"},
             new List<string> {   "748182946","1588507657","-132281226","748182946"},
@@ -147,6 +147,9 @@ namespace Test.SqlCodeSmell
             new List<string> {"996747604", "11"},
             new List<string> {"-132281226", "15"}
         };
+
+        public static int ExampleWindowSize = 4;
+
         public static string Example5GramHashFunction(string gram)
         {
             // TODO: change all examples and use GetHashCode instead I cant figure out their hash algoritm they have used. 
