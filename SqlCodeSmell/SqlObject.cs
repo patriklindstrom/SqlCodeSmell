@@ -11,10 +11,17 @@ namespace SqlCodeSmell
     {
         private string _washedCode;
         private List<List<NGram>> _windowsList;
+        private List<NGram> _fingerPrint;
         public string Name { get; set; }
         public EnumSqlObjType SqlObjType { get; set; }
         public string OrgCode { get; set; }
         public NGramSeq NGramSequnce { get; set; }
+
+        public List<NGram> FingerPrint
+        {
+            get { return _fingerPrint; }
+            
+        }
 
         public string WashedCode
         {
@@ -46,7 +53,15 @@ namespace SqlCodeSmell
 
             return nGramSeq;
         }
+        public List<NGram> AddNFingerPrintSequnce(List<List<NGram>> wList)
+        {
+             _fingerPrint = new List<NGram>();
+            var gramlist =wList.MinBy()
+            int i = 0;
 
+
+            return fingerPrint;
+        }
         private string WashCode(string input)
         {
             var noComments = RemovComments(input);
