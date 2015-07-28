@@ -10,6 +10,7 @@ namespace SqlCodeSmell
     public class SqlObject
     {
         private string _washedCode;
+        private List<List<NGram>> _windowsList;
         public string Name { get; set; }
         public EnumSqlObjType SqlObjType { get; set; }
         public string OrgCode { get; set; }
@@ -21,7 +22,7 @@ namespace SqlCodeSmell
         }
 
         public List<NGram> NGramList { get; set; }
-        public List<List<NGram>> WindowsList { get; set; }
+        public List<List<NGram>> WindowsList { get { return _windowsList; } }
 
         public SqlObject(SqlObjectData sqlObjectData, int gramLen, Func<string, string> hashFunc)
         {
@@ -71,24 +72,12 @@ namespace SqlCodeSmell
 
         public void AddWindowsList(int windowSize)
         {
-            // http://stackoverflow.com/questions/13709626/split-an-ienumerablet-into-fixed-sized-chunks-return-an-ienumerableienumerab
-            // https://code.google.com/p/morelinq/source/browse/MoreLinq/Batch.cs
-            // https://code.google.com/p/morelinq/source/browse/MoreLinq/
-           // var foo = NGramSequnce.NGramList.Batch(windowSize);
-           // var foo = NGramSequnce.NGramList.Skip((page - 1) * pageSize).Take(pageSize);           
-            int pageSize = windowSize;
-            //int totalPages = (int)Math.Ceiling((decimal)NGramSequnce.NGramList.Count() / (decimal)pageSize);
-           // int totalWindows = NGramSequnce.NGramList.Count - NGramSequnce.GramLen;
-            // TODO: remove this magic number for totalWindows 14
-            int totalWindows = 14;
-            WindowsList = new List<List<NGram>>();
+            _windowsList = new List<List<NGram>>();
+            int totalWindows = NGramSequnce.NGramList.Count - windowSize + 1;
             for (int page = 0; page < totalWindows; page++)
             {
-                WindowsList.Add(NGramSequnce.NGramList.Skip(page).Take(pageSize).ToList());  
+                _windowsList.Add(NGramSequnce.NGramList.Skip(page).Take(windowSize).ToList());  
             }
-            
-
-            //      WindowsList = NGramSequnce.NGramList.Batch(windowSize) as List<List<NGram>>;
         }
 
         private int SelectUniqueHashInWindows()
