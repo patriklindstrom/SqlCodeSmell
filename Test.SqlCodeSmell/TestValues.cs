@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Rhino.Mocks.Constraints;
+using SqlCodeSmell;
 
 namespace Test.SqlCodeSmell
 {
@@ -25,7 +26,8 @@ namespace Test.SqlCodeSmell
             "--join fi_TB as i on i.id=o.id";
 
         public static string StoredProcedureWithCommentsWashedcode =
-            "createprocedureasselecto.id,o.foo,u.fumfromfoo_tbasojoinfum_tbasuonu.id=o.id";
+            "createprocedureasselectoidofooufumfromfootbasojoinfumtbasuonuid=oid";
+        //  "createprocedureasselecto.id,o.foo,u.fumfromfoo_tbasojoinfum_tbasuonu.id=o.id";
 
         public static string Examplecode = "A do run run run, a do run run";
         public static string ExamplecodeWashed = "adorunrunrunadorunrun";

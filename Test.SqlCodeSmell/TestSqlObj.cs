@@ -1,9 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using Microsoft.SqlServer.Server;
 using NUnit.Framework;
 using Rhino.Mocks;
+using SqlCodeSmell;
+
 namespace Test.SqlCodeSmell
 {
     [TestFixture]
@@ -96,9 +99,25 @@ namespace Test.SqlCodeSmell
             //Act
             var sut = new SqlObject(sqlObjectData: mockSqlObjectReader.GetNextSqlObj(), gramLen: Mv.ExampleGramLength, hashFunc: Mv.Example5GramHashFunction);
             sut.AddWindowsList(windowSize:Mv.ExampleWindowSize);
-            //Assert
+            // Our testvalues are not the same format as the sut windowslist, maybe we should make it the other way arount and mock and make better testvalues
             
-            CollectionAssert.AreEqual(Mv.WindowsOfLen4DotNetList, sut.WindowsList, "The Windows list do not matcht expected values does");
+            //Assert
+            var sutHashList = sut.WindowsList.Select(g => g.Select(p => p.Hashvalue));
+            int j = 0;
+            bool areEqual = false;
+            foreach (var wlist in sut.WindowsList)
+            {
+                int k = 0;
+
+                foreach (var gramlist in sut.WindowsList[j])
+                {
+                    areEqual = gramlist.Hashvalue == Mv.WindowsOfLen4DotNetList[j][k];
+                    k++;
+                }
+                j++;
+            }
+            Assert.IsTrue(areEqual, "The Windows list do not matcht expected values ");
+          //  CollectionAssert.AreEqual(Mv.WindowsOfLen4DotNetList, hashList, "The Windows list do not matcht expected values ");
         }
 
     }

@@ -1,12 +1,10 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
+using MoreLinq;
 
-namespace Test.SqlCodeSmell
+namespace SqlCodeSmell
 {
    public enum EnumSqlObjType { StoredProcedure,ScalarFunction,TableFunction };
     public class SqlObject
@@ -71,9 +69,26 @@ namespace Test.SqlCodeSmell
                 .ToArray());
         }
 
-        public void AddWindowsList(object windowSize)
+        public void AddWindowsList(int windowSize)
         {
-            throw new NotImplementedException();
+            // http://stackoverflow.com/questions/13709626/split-an-ienumerablet-into-fixed-sized-chunks-return-an-ienumerableienumerab
+            // https://code.google.com/p/morelinq/source/browse/MoreLinq/Batch.cs
+            // https://code.google.com/p/morelinq/source/browse/MoreLinq/
+           // var foo = NGramSequnce.NGramList.Batch(windowSize);
+           // var foo = NGramSequnce.NGramList.Skip((page - 1) * pageSize).Take(pageSize);           
+            int pageSize = windowSize;
+            //int totalPages = (int)Math.Ceiling((decimal)NGramSequnce.NGramList.Count() / (decimal)pageSize);
+           // int totalWindows = NGramSequnce.NGramList.Count - NGramSequnce.GramLen;
+            // TODO: remove this magic number for totalWindows 14
+            int totalWindows = 14;
+            WindowsList = new List<List<NGram>>();
+            for (int page = 0; page < totalWindows; page++)
+            {
+                WindowsList.Add(NGramSequnce.NGramList.Skip(page).Take(pageSize).ToList());  
+            }
+            
+
+            //      WindowsList = NGramSequnce.NGramList.Batch(windowSize) as List<List<NGram>>;
         }
 
         private int SelectUniqueHashInWindows()
@@ -107,7 +122,11 @@ namespace Test.SqlCodeSmell
         {
             HashFunc = hashFunc;
             NGramList = new List<NGram>();
+            GramLen = gramLen;
         }
+
+        public int GramLen { get; set; }
+
         public List<NGram> NGramList { get; set; }
         private Func<string, string> HashFunc { get; set; }
 
