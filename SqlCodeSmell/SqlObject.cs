@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text.RegularExpressions;
 using MoreLinq;
@@ -53,14 +54,23 @@ namespace SqlCodeSmell
 
             return nGramSeq;
         }
-        public List<NGram> AddNFingerPrintSequnce(List<List<NGram>> wList)
+        public void AddNFingerPrintSequnce(List<List<NGram>> wList)
         {
-             _fingerPrint = new List<NGram>();
-            var gramlist =wList.MinBy()
-            int i = 0;
-
-
-            return fingerPrint;
+             
+             int i = 0;
+            int j = 0;
+            NGram minWnGram = wList[i].MinBy(g => g.Hashvalue);
+            _fingerPrint = new List<NGram>(); 
+            var lastOrDefault = _fingerPrint.LastOrDefault();
+            if (lastOrDefault != null && lastOrDefault.Hashvalue == minWnGram.Hashvalue)
+            {
+                // if there are many of the same. Take the one the most to the right - highest index
+                var minVal = minWnGram.Hashvalue;
+                minWnGram = wList[i].FindLast(g => g.Hashvalue.Equals(minVal));
+                
+            }
+            _fingerPrint.Add(minWnGram);
+            Debug.Print(minWnGram.Hashvalue);
         }
         private string WashCode(string input)
         {

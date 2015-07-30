@@ -114,7 +114,6 @@ namespace Test.SqlCodeSmell
             foreach (var wlist in sut.WindowsList)
             {
                 int k = 0;
-
                 foreach (var gramlist in sut.WindowsList[j])
                 {
                     areEqual = gramlist.Hashvalue == Mv.WindowsOfLen4DotNetList[j][k];
@@ -123,7 +122,43 @@ namespace Test.SqlCodeSmell
                 j++;
             }
             Assert.IsTrue(areEqual, "The Windows list do not matcht expected values ");
-
+            // Unfortunate this does not work and cannot be debugged either. tried all sorts of mapping and fixing
+            // CollectionAssert.AreEqual(Mv.WindowsOfLen4DotNetList.Select(g => g.Select(p => p)), sut.WindowsList.Select(g => g.Select(p => p.Hashvalue)), new HashValueCompareForNSeq(),
+            //"The N gram Windows list do not matcht expected values ")
+            ;
+        }
+        [Test]
+        public static void TestFingerPrint()
+        {
+            //Arrange
+            var mockSqlObjectData = MockRepository.GenerateStub<SqlObjectData>();
+            mockSqlObjectData.SqlObjType = Mv.StoredProcedureWithCommentsType;
+            mockSqlObjectData.Name = "stanfordDoGetFingerPrint";
+            mockSqlObjectData.SqlObjCode = Mv.Examplecode;
+            var mockSqlObjectReader = MockRepository.GenerateStub<SqlObjectReader>();
+            mockSqlObjectReader.Stub(f => f.GetNextSqlObj()).Return(mockSqlObjectData);
+            var expectedWindowList = Mv.WindowsOfLen4DotNetList;
+            var expectedHash = Mv.Example5GramList.Select(Mv.Example5GramHashFunction);
+            //Act
+            var sut = new SqlObject(sqlObjectData: mockSqlObjectReader.GetNextSqlObj(), gramLen: Mv.ExampleGramLength,
+                hashFunc: Mv.Example5GramHashFunction);
+            sut.AddWindowsList(windowSize: Mv.ExampleWindowSize);
+            sut.AddNFingerPrintSequnce(sut.WindowsList);
+            // Our testvalues are not the same format as the sut windowslist, maybe we should make it the other way arount and mock and make better testvalues
+            //Assert
+            int j = 0;
+            bool areEqual = false;
+            foreach (var wlist in sut.WindowsList)
+            {
+                int k = 0;
+                foreach (var gramlist in sut.WindowsList[j])
+                {
+                    areEqual = gramlist.Hashvalue == Mv.WindowsOfLen4DotNetList[j][k];
+                    k++;
+                }
+                j++;
+            }
+            Assert.IsTrue(areEqual, "The Windows list do not matcht expected values ");
             // Unfortunate this does not work and cannot be debugged either. tried all sorts of mapping and fixing
             // CollectionAssert.AreEqual(Mv.WindowsOfLen4DotNetList.Select(g => g.Select(p => p)), sut.WindowsList.Select(g => g.Select(p => p.Hashvalue)), new HashValueCompareForNSeq(),
             //"The N gram Windows list do not matcht expected values ")
