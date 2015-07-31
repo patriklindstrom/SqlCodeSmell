@@ -8,6 +8,7 @@ using NUnit.Framework;
 using Rhino.Mocks;
 using SqlCodeSmell;
 
+
 namespace Test.SqlCodeSmell
 {
     [TestFixture]

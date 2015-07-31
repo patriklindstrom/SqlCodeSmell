@@ -57,21 +57,25 @@ namespace SqlCodeSmell
         public void AddNFingerPrintSequnce(List<List<NGram>> wList)
         {
              
-             int i = 0;
+            int i = 0;
             int j = 0;
-            NGram minWnGram = wList[i].MinBy(g => g.Hashvalue);
-            _fingerPrint = new List<NGram>(); 
+            // if there is nothing in the fingerprint we must store something to start with.
+            _fingerPrint = new List<NGram>() { FindMinGram(wList, 0) }; 
+             i = 3;
+             NGram minWnGram = FindMinGram(wList, i);
             var lastOrDefault = _fingerPrint.LastOrDefault();
-            if (lastOrDefault != null && lastOrDefault.Hashvalue == minWnGram.Hashvalue)
+            if (!lastOrDefault.Equals(minWnGram))
             {
-                // if there are many of the same. Take the one the most to the right - highest index
-                var minVal = minWnGram.Hashvalue;
-                minWnGram = wList[i].FindLast(g => g.Hashvalue.Equals(minVal));
-                
+                _fingerPrint.Add(minWnGram);
+                Debug.Print(minWnGram.Hashvalue);
             }
-            _fingerPrint.Add(minWnGram);
-            Debug.Print(minWnGram.Hashvalue);
         }
+
+        public static NGram FindMinGram(List<List<NGram>> wList, int i)
+        {
+            return wList[i].FindLast(g => g.Hashvalue == wList[i].MinBy(m => m.Hashvalue).Hashvalue);
+        }
+
         private string WashCode(string input)
         {
             var noComments = RemovComments(input);
