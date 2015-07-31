@@ -132,7 +132,8 @@ namespace Test.SqlCodeSmell
         };
 
         public static List<string> WinnowingFingerprintStanfordList = new List<string> {"17", "17", "8", "39", "17"};
-        public static List<string> WinnowingFingerprintDotNetList = new List<string> { "-132281226", "-132281226", "1588507676", "996747604", "-132281226" };
+        public static List<string> WinnowingFingerprintDotNetStanfordList = new List<string> { "-132281226", "-132281226", "1588507676", "996747604", "-132281226" };
+        public static List<string> WinnowingFingerprintDotNetListPatrikSuggested = new List<string> { "-132281226", "-132281226", "-1268239127", "1588507676", "-132281226" };
         public static List<List<string>> WinnowingFingerprintWith0PosStanfordList = new List<List<string>>
         {
             new List<string> {"17", "3"},

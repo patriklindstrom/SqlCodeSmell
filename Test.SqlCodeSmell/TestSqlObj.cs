@@ -149,20 +149,16 @@ namespace Test.SqlCodeSmell
             //Assert
             int j = 0;
             bool areEqual = false;
-            foreach (var wlist in sut.WindowsList)
-            {
                 int k = 0;
-                foreach (var gramlist in sut.WindowsList[j])
+                foreach (var gramlist in sut.FingerPrint)
                 {
-                    areEqual = gramlist.Hashvalue == Mv.WindowsOfLen4DotNetList[j][k];
+                    areEqual = gramlist.Hashvalue == Mv.WinnowingFingerprintDotNetListPatrikSuggested[k];
+                    Debug.Print(gramlist.Hashvalue);
                     k++;
                 }
-                j++;
-            }
-            Assert.IsTrue(areEqual, "The Windows list do not matcht expected values ");
-            // Unfortunate this does not work and cannot be debugged either. tried all sorts of mapping and fixing
-            // CollectionAssert.AreEqual(Mv.WindowsOfLen4DotNetList.Select(g => g.Select(p => p)), sut.WindowsList.Select(g => g.Select(p => p.Hashvalue)), new HashValueCompareForNSeq(),
-            //"The N gram Windows list do not matcht expected values ")
+  
+            Assert.IsTrue(areEqual, "The Fingerprint list do not matcht expected values ");
+
             ;
         }
     }

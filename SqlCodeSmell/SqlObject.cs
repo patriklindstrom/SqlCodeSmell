@@ -7,7 +7,13 @@ using MoreLinq;
 
 namespace SqlCodeSmell
 {
-   public enum EnumSqlObjType { StoredProcedure,ScalarFunction,TableFunction };
+    public enum EnumSqlObjType
+    {
+        StoredProcedure,
+        ScalarFunction,
+        TableFunction
+    };
+
     public class SqlObject
     {
         private string _washedCode;
@@ -21,16 +27,19 @@ namespace SqlCodeSmell
         public List<NGram> FingerPrint
         {
             get { return _fingerPrint; }
-            
         }
 
         public string WashedCode
         {
-            get { return _washedCode; }           
+            get { return _washedCode; }
         }
 
         public List<NGram> NGramList { get; set; }
-        public List<List<NGram>> WindowsList { get { return _windowsList; } }
+
+        public List<List<NGram>> WindowsList
+        {
+            get { return _windowsList; }
+        }
 
         public SqlObject(SqlObjectData sqlObjectData, int gramLen, Func<string, string> hashFunc)
         {
@@ -41,9 +50,9 @@ namespace SqlCodeSmell
             NGramSequnce = AddNGramSequnce(hashFunc, gramLen, _washedCode);
         }
 
-        public NGramSeq AddNGramSequnce(Func<string, string> hashFunc,int gramLen,string washedCode)
+        public NGramSeq AddNGramSequnce(Func<string, string> hashFunc, int gramLen, string washedCode)
         {
-            var nGramSeq = new NGramSeq(hashFunc,gramLen);
+            var nGramSeq = new NGramSeq(hashFunc, gramLen);
             var gramlist = washedCode.SplitRunBy(gramLen);
             int i = 0;
             foreach (var grammy in gramlist)
@@ -54,20 +63,19 @@ namespace SqlCodeSmell
 
             return nGramSeq;
         }
+
         public void AddNFingerPrintSequnce(List<List<NGram>> wList)
         {
-             
-            int i = 0;
-            int j = 0;
             // if there is nothing in the fingerprint we must store something to start with.
-            _fingerPrint = new List<NGram>() { FindMinGram(wList, 0) }; 
-             i = 3;
-             NGram minWnGram = FindMinGram(wList, i);
-            var lastOrDefault = _fingerPrint.LastOrDefault();
-            if (!lastOrDefault.Equals(minWnGram))
+            _fingerPrint = new List<NGram>() {FindMinGram(wList, 0)};
+            for (int j = 1; j < wList.Count; j++)
             {
-                _fingerPrint.Add(minWnGram);
-                Debug.Print(minWnGram.Hashvalue);
+                NGram minWnGram = FindMinGram(wList, j);
+                var lastOrDefault = _fingerPrint.LastOrDefault();
+                if (!lastOrDefault.Equals(minWnGram))
+                {
+                    _fingerPrint.Add(minWnGram);
+                }
             }
         }
 
@@ -80,7 +88,7 @@ namespace SqlCodeSmell
         {
             var noComments = RemovComments(input);
             var noWhiteCode = RemoveWhitespace(noComments);
-            return  noWhiteCode.ToLower();
+            return noWhiteCode.ToLower();
         }
 
         private string RemovComments(string input)
@@ -89,10 +97,10 @@ namespace SqlCodeSmell
             var noMultiLineComments = findMultiLineComments.Replace(input, String.Empty);
             Regex findSingleLineComments = new Regex(@"--.*");
             var noSingleLineComments = findSingleLineComments.Replace(noMultiLineComments, String.Empty);
-            return noSingleLineComments.ToLower() ;
+            return noSingleLineComments.ToLower();
         }
 
-        private  string RemoveWhitespace( string input)
+        private string RemoveWhitespace(string input)
         {
             return new string(input.ToCharArray()
                 .Where(c => !(Char.IsWhiteSpace(c) || Char.IsPunctuation(c) || Char.IsSeparator(c)))
@@ -105,7 +113,7 @@ namespace SqlCodeSmell
             int totalWindows = NGramSequnce.NGramList.Count - windowSize + 1;
             for (int page = 0; page < totalWindows; page++)
             {
-                _windowsList.Add(NGramSequnce.NGramList.Skip(page).Take(windowSize).ToList());  
+                _windowsList.Add(NGramSequnce.NGramList.Skip(page).Take(windowSize).ToList());
             }
         }
 
@@ -115,28 +123,32 @@ namespace SqlCodeSmell
             throw new NotImplementedException();
         }
     }
+
     public class SqlObjectData
     {
-        public string SqlObjCode { get; set; }       
-        public  string Name{ get; set; }
-        public EnumSqlObjType SqlObjType { get; set; }  
+        public string SqlObjCode { get; set; }
+        public string Name { get; set; }
+        public EnumSqlObjType SqlObjType { get; set; }
     }
+
     public class SqlObjectReader
     {
         public virtual SqlObjectData GetNextSqlObj()
-        {           
+        {
             return null;
         }
     }
+
     public class NGram
     {
         public string Gram { get; set; }
         public string Hashvalue { get; set; }
-        public int Position0Based { get; set; } 
+        public int Position0Based { get; set; }
     }
+
     public class NGramSeq
     {
-        public NGramSeq(Func<string, string> hashFunc,int gramLen)
+        public NGramSeq(Func<string, string> hashFunc, int gramLen)
         {
             HashFunc = hashFunc;
             NGramList = new List<NGram>();
@@ -148,11 +160,12 @@ namespace SqlCodeSmell
         public List<NGram> NGramList { get; set; }
         private Func<string, string> HashFunc { get; set; }
 
-        public void Add(string gram,int pos)
+        public void Add(string gram, int pos)
         {
-           NGramList.Add(new NGram{Gram = gram,Hashvalue = HashFunc(gram),Position0Based = pos});
+            NGramList.Add(new NGram {Gram = gram, Hashvalue = HashFunc(gram), Position0Based = pos});
         }
     }
+
     public static class EnumerableEx
     {
         public static IEnumerable<string> SplitBy(this string str, int chunkLength)
@@ -168,11 +181,13 @@ namespace SqlCodeSmell
                 yield return str.Substring(i, chunkLength);
             }
         }
+
         public static IEnumerable<string> SplitRunBy(this string str, int chunkLength)
         {
             if (String.IsNullOrEmpty(str)) throw new ArgumentException();
             if (chunkLength < 1) throw new ArgumentException();
-            return str.TakeWhile((t, i) => chunkLength + i <= str.Length).Select((t, i) => str.Substring(i, chunkLength));
+            return str.TakeWhile((t, i) => chunkLength + i <= str.Length)
+                .Select((t, i) => str.Substring(i, chunkLength));
             //for (int i = 0; i < str.Length; i++)
             //{
             //    if (chunkLength + i > str.Length)
