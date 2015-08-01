@@ -113,6 +113,23 @@ namespace Test.SqlCodeSmell
             new List<string> {    "-824819715","889328056","1588508618","-132281226"},
             new List<string> {    "889328056","1588508618","-132281226","748182946"}
         };
+     public static List<List<string>> WindowsOfLen4DotNetFailList = new List<List<string>>()
+        {
+            new List<string> {"-824819715", "889328056", "1588508618", "-1588508618"},
+            new List<string> { "889328056", "1588508618", "-132281226","748182946"},
+            new List<string> {  "1588508618", "-132281226","748182946","1588507657"},
+            new List<string> {   "-132281226","748182946","1588507657","-132281226"},
+            new List<string> {   "748182946","1588507657","-132281226","748182946"},
+            new List<string> {   "1588507657","-132281226","748182946","1588507676"},
+            new List<string> {   "-132281226","748182946","1588507676","1884141426"},
+            new List<string> {   "748182946","0","1884141426", "-1268239127"},
+            new List<string> {   "1588507676","1884141426", "-1268239127","996747604"},
+            new List<string> {   "1884141426", "-1268239127","996747604","-824819715"},
+            new List<string> {    "-1268239127","996747604","-824819715","889328056"},
+            new List<string> {    "996747604","-824819715","889328056","1588508618"},
+            new List<string> {    "-824819715","889328056","1588508618","-132281226"},
+            new List<string> {    "889328056","1588508618","-132281226","748182946"}
+        };
         public static List<List<string>> WindowsOfLen4StanfordList = new List<List<string>>()
         {
             new List<string> {"77", "74", "42", "17"},         
@@ -133,7 +150,7 @@ namespace Test.SqlCodeSmell
 
         public static List<string> WinnowingFingerprintStanfordList = new List<string> {"17", "17", "8", "39", "17"};
         public static List<string> WinnowingFingerprintDotNetStanfordList = new List<string> { "-132281226", "-132281226", "1588507676", "996747604", "-132281226" };
-        public static List<string> WinnowingFingerprintDotNetListPatrikSuggested = new List<string> { "-132281226", "-132281226", "-1268239127", "1588507676", "-132281226" };
+        public static List<string> WinnowingFingerprintDotNetListPatrikSuggested = new List<string> { "-132281226", "-132281226", "-1268239127", "1588508618", "-132281226" };
         public static List<List<string>> WinnowingFingerprintWith0PosStanfordList = new List<List<string>>
         {
             new List<string> {"17", "3"},

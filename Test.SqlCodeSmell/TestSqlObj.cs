@@ -94,7 +94,7 @@ namespace Test.SqlCodeSmell
 
         [Test]
         public static void TestWindowsOfhashesOfLengthN()
-        {
+        { // this Test do not work debug it
             //Arrange
             var mockSqlObjectData = MockRepository.GenerateStub<SqlObjectData>();
             mockSqlObjectData.SqlObjType = Mv.StoredProcedureWithCommentsType;
@@ -117,8 +117,12 @@ namespace Test.SqlCodeSmell
                 int k = 0;
                 foreach (var gramlist in sut.WindowsList[j])
                 {
-                    areEqual = gramlist.Hashvalue == Mv.WindowsOfLen4DotNetList[j][k];
+                    areEqual = gramlist.Hashvalue == Mv.WindowsOfLen4DotNetFailList[j][k];
                     k++;
+                    if (!areEqual)
+                    {
+                        break;
+                    }
                 }
                 j++;
             }
@@ -155,11 +159,10 @@ namespace Test.SqlCodeSmell
                     areEqual = gramlist.Hashvalue == Mv.WinnowingFingerprintDotNetListPatrikSuggested[k];
                     Debug.Print(gramlist.Hashvalue);
                     k++;
-                }
-  
+                }  
             Assert.IsTrue(areEqual, "The Fingerprint list do not matcht expected values ");
-
-            ;
+            CollectionAssert.AreEqual(Mv.WinnowingFingerprintDotNetListPatrikSuggested, sut.FingerPrint.Select(f=>f.Hashvalue),
+               "Hashfunction does not give expected value for all Example grams");
         }
     }
 
